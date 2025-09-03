@@ -1,0 +1,4 @@
+pyserial
+systeminfo-python3
+screen-brightness-control
+
