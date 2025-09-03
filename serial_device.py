@@ -161,13 +161,7 @@ def get_date_time():
     current_time = now.strftime("%H:%M:%S")   # e.g. "18:47:12"
     return current_date, current_time
 
-
-def build_first_message():
-    msg = {
-        "OSName": platform.system(),
-        "memMax": int(psutil.virtual_memory().total / (1024*1024))  # MB
-    }
-    return json.dumps(msg)
+# ------------ Build message ------------
 
 
 def build_message():
@@ -175,12 +169,15 @@ def build_message():
     battery = psutil.sensors_battery()
     msg = {
         # String values
+        "command": "status",  # example command
+        "OSName": platform.system(),
         "time": current_time,
         "date": current_date,
 
         # Int values
         "cpuUsage": int(psutil.cpu_percent()),
         "cpuTemp": get_cpu_temp(),
+        "memMax": int(psutil.virtual_memory().total / (1024*1024)),   # MB
         "MemUsage": int(psutil.virtual_memory().used / (1024*1024)),  # MB
         "volume": get_volume(),
         "brightness": int(sbc.get_brightness(display=0)[0]),
