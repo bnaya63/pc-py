@@ -6,7 +6,6 @@ import screen_brightness_control as sbc
 from copy_paste import send_cvx_command
 import threading
 import pythoncom
-import queue
 
 board_is_connected = threading.Event()
 
@@ -26,37 +25,29 @@ MAX_JSON_ERRORS = 15
 serial_chip_vid = 6790
 serial_chip_pid = 29987
 
-write_queue = queue.Queue()
+serial_lock = threading.Lock()
 
 
-def slow_write_task():
+def slow_write_task(port):
     pythoncom.CoInitialize()
     while board_is_connected.is_set():
-        slow_messege = build_slow_message()
-        write_queue.put(slow_messege)
-        time.sleep(0.5)
 
-
-def fast_write_task():
-    pythoncom.CoInitialize()
-    while board_is_connected.is_set():
-        fast_messege = build_fast_messege()
-        write_queue.put(fast_messege)
-        time.sleep(0.05)
-
-
-def write_task(port):
-    pythoncom.CoInitialize()
-    while board_is_connected.is_set():
-        try:
-            msg = write_queue.get(timeout=1)
-        except queue.Empty:
-            continue
-        try:
-            port.write((msg + "\n").encode("utf-8"))
+        messege = build_slow_message()
+        with serial_lock:
+            port.read_all()
+            port.write((messege + "\n").encode("utf-8"))
             port.flush()
-        except Exception as e:
-            print("Serial write error:", e)
+            time.sleep(0.5)
+
+
+def fast_write_task(port):
+    pythoncom.CoInitialize()
+    while board_is_connected.is_set():
+        messege = build_fast_messege()
+        with serial_lock:
+            port.read_all()
+            port.write((messege + "\n").encode("utf-8"))
+            port.flush()
 
 
 def read_task(port):
@@ -116,16 +107,14 @@ def main():
                 continue
 
         if port is not None:
-            t1 = threading.Thread(target=slow_write_task,)
-            t2 = threading.Thread(target=fast_write_task,)
-            t3 = threading.Thread(target=write_task, args=(port,))
-            t4 = threading.Thread(target=read_task, args=(port,))
+            t1 = threading.Thread(target=slow_write_task, args=(port,))
+            t2 = threading.Thread(target=slow_write_task, args=(port,))
+            t3 = threading.Thread(target=read_task, args=(port,))
 
             if board_is_connected.is_set():
                 t1.start()
                 t2.start()
                 t3.start()
-                t4.start()
 
         while board_is_connected.is_set():
             time.sleep(1)
