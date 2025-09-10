@@ -13,14 +13,8 @@ import screen_brightness_control as sbc
 
 import psutil      # for cpu/mem usage
 
-
 system_info = SystemInfo()
 info = system_info.get_all_info()
-
-
-# host_commands = {"app_start": "", "volume": "", "brightness": ""}
-# board_commands = {"display_on": "true", "theme": "", "reset": "false"}
-# board_commands.update({"display_on": "true", "theme": "2"})
 
 
 def find_serial_port(serial_chip_vid, serial_chip_pid):
@@ -29,7 +23,7 @@ def find_serial_port(serial_chip_vid, serial_chip_pid):
         if port.vid == serial_chip_vid and port.pid == serial_chip_pid:
             print(f"found esp32 on {port}")
             try:
-                port_connected = serial.Serial(port.device, 115200, timeout=2)
+                port_connected = serial.Serial(port.device, 230400, timeout=2)
                 time.sleep(1)  # allow ESP32 reset after open
                 return port_connected
             except Exception as e:
@@ -66,9 +60,6 @@ def serial_handshake(port):
 
     print("Handshake timed out")
     return False
-
-
-# def send_data(port):
 
 
 # ------------ Helper functions ------------
@@ -119,19 +110,6 @@ def network_snapshot():
     return result
 
 
-def get_ip():
-    """Get the local IP address."""
-    try:
-        ip = socket.gethostbyname(socket.gethostname())
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        # ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except:
-        return "0.0.0.0"
-
-
 def get_cpu_temp():
     """Try to get CPU temperature (Linux only)."""
     try:
@@ -147,12 +125,6 @@ def get_cpu_temp():
     return 0
 
 
-def get_brightness():
-    """Placeholder: return dummy brightness (0-100)."""
-    # Needs extra lib (screen-brightness-control or similar)
-    return 75
-
-
 def get_date_time():
     now = datetime.now()
 
@@ -164,12 +136,11 @@ def get_date_time():
 # ------------ Build message ------------
 
 
-def build_message():
+def build_slow_message():
     current_date, current_time = get_date_time()
     battery = psutil.sensors_battery()
     msg = {
         # String values
-        "command": "status",  # example command
         "OSName": platform.system(),
         "time": current_time,
         "date": current_date,
@@ -179,11 +150,18 @@ def build_message():
         "cpuTemp": get_cpu_temp(),
         "memMax": int(psutil.virtual_memory().total / (1024*1024)),   # MB
         "MemUsage": int(psutil.virtual_memory().used / (1024*1024)),  # MB
-        "volume": get_volume(),
-        "brightness": int(sbc.get_brightness(display=0)[0]),
+
         "battery": battery.percent,
         "powerIn": battery.power_plugged,
         # "internet": is_internet_reachable(),
         # "interfaces": network_snapshot()
+    }
+    return json.dumps(msg)
+
+
+def build_fast_messege():
+    msg = {
+        "volume": get_volume(),
+        "brightness": int(sbc.get_brightness(display=0)[0]),
     }
     return json.dumps(msg)

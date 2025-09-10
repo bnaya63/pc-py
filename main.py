@@ -1,10 +1,17 @@
-from serial_device import serial_handshake, find_serial_port, build_message
+from serial_device import serial_handshake, find_serial_port, build_slow_message, build_fast_messege
 import time
 import json
 from audio import set_volume
 import screen_brightness_control as sbc
+from copy_paste import send_cvx_command
+import threading
+import pythoncom
+import queue
+
+board_is_connected = threading.Event()
 
 SERIAL_TIMEOUT = 5000
+MAX_JSON_ERRORS = 15
 
 # Choose the correct vid and pid of your board.
 # On windows: Device Manager > device > Properties > Details > Hardware ID.
@@ -19,10 +26,74 @@ SERIAL_TIMEOUT = 5000
 serial_chip_vid = 6790
 serial_chip_pid = 29987
 
+write_queue = queue.Queue()
+
+
+def slow_write_task():
+    pythoncom.CoInitialize()
+    while board_is_connected.is_set():
+        slow_messege = build_slow_message()
+        write_queue.put(slow_messege)
+        time.sleep(0.5)
+
+
+def fast_write_task():
+    pythoncom.CoInitialize()
+    while board_is_connected.is_set():
+        fast_messege = build_fast_messege()
+        write_queue.put(fast_messege)
+        time.sleep(0.05)
+
+
+def write_task(port):
+    pythoncom.CoInitialize()
+    while board_is_connected.is_set():
+        try:
+            msg = write_queue.get(timeout=1)
+        except queue.Empty:
+            continue
+        try:
+            port.write((msg + "\n").encode("utf-8"))
+            port.flush()
+        except Exception as e:
+            print("Serial write error:", e)
+
+
+def read_task(port):
+    pythoncom.CoInitialize()
+
+    while board_is_connected.is_set():
+        if port.in_waiting > 0:
+            data = port.read_until(b"\n").decode('utf-8').strip()
+            if data:  # only process if not empty
+                try:
+                    data = json.loads(data)  # decode JSON
+
+                    # print(data)
+
+                    # --- handle parsed data ---
+                    if isinstance(data, dict):  # only process dict JSON objects
+                        if "command" in data:
+                            var_set_command = data["command"]
+                            if var_set_command:
+                                send_cvx_command(var_set_command)
+                        else:
+                            var_set_volume = data.get("setVolume")
+                            var_set_brightness = data.get("setBrightness")
+
+                            if var_set_brightness is not None:
+                                sbc.set_brightness(var_set_brightness)
+                            if var_set_volume is not None:
+                                set_volume(var_set_volume)
+                    else:
+                        print("Received non-dict JSON:", data)
+
+                except json.JSONDecodeError:
+                    print("Invalid JSON:", data)
+
 
 def main():
     port = None
-    last_receive_time = 0
 
     while True:
         # Try to find and connect to device
@@ -34,53 +105,35 @@ def main():
                 continue
 
         # Perform handshake
-        if not serial_handshake(port):
-            print("Handshake failed")
-            port.close()
-            port = None
-            continue
+        if port is not None:
+            if serial_handshake(port):
+                board_is_connected.set()
+            else:
+                print("Handshake failed")
+                board_is_connected.clear()
+                port.close()
+                port = None
+                continue
 
-        # Main operation loop
-        try:
-            while True:
-                # send messege
-                messege = build_message()
-                print(messege)
-                port.read_all()
-                port.write((messege + "\n").encode("utf-8"))
-                port.flush()
+        if port is not None:
+            t1 = threading.Thread(target=slow_write_task,)
+            t2 = threading.Thread(target=fast_write_task,)
+            t3 = threading.Thread(target=write_task, args=(port,))
+            t4 = threading.Thread(target=read_task, args=(port,))
 
-                # recive messege
-                if port.in_waiting > 0:  # if data is available
-                    line = port.read_until(b"\n").decode('utf-8').rstrip()
-                    if line:  # only process if not empty
-                        try:
-                            data = json.loads(line)  # decode JSON
-                            var_set_volume = data.get("setVolume")
-                            var_set_brightness = data.get("setBrightness")
+            if board_is_connected.is_set():
+                t1.start()
+                t2.start()
+                t3.start()
+                t4.start()
 
-                            if var_set_brightness is not None:
-                                sbc.set_brightness(var_set_brightness)
+        while board_is_connected.is_set():
+            time.sleep(1)
 
-                            if var_set_volume is not None:
-                                set_volume(var_set_volume)
+        board_is_connected.clear()
 
-                            last_receive_time = int(time.time() * 1000)
-                            time.sleep(0.2)
-
-                        except json.JSONDecodeError:
-                            print("Invalid JSON:", line)
-                else:
-                    now = int(time.time() * 1000)
-                    if last_receive_time != 0 and (now - last_receive_time >= SERIAL_TIMEOUT):
-                        print("⚠️ Serial timeout — no data received.")
-                        last_receive_time = 0
-                        break
-
-        except Exception as e:
-            print(f"Error in main loop: {e}")
-            # port.close()
-            # port = None
+        port.close()
+        port = None
 
 
 if __name__ == "__main__":
