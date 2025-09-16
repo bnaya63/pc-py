@@ -151,7 +151,7 @@ def build_slow_message():
         "memMax": int(psutil.virtual_memory().total / (1024*1024)),   # MB
         "MemUsage": int(psutil.virtual_memory().used / (1024*1024)),  # MB
 
-        "battery": battery.percent,
+        "batteryPercent": battery.percent,
         "powerIn": battery.power_plugged,
         # "internet": is_internet_reachable(),
         # "interfaces": network_snapshot()

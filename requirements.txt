@@ -3,3 +3,8 @@ systeminfo-python3
 screen-brightness-control
 keyboard
 
+
+
+psutil
+pillow
+pywin32

@@ -1,4 +1,5 @@
 from serial_device import serial_handshake, find_serial_port, build_slow_message, build_fast_messege
+from icons import app_icon_task
 import time
 import json
 from audio import set_volume
@@ -33,6 +34,7 @@ def slow_write_task(port):
     while board_is_connected.is_set():
 
         messege = build_slow_message()
+        # print(messege)
         with serial_lock:
             port.read_all()
             port.write((messege + "\n").encode("utf-8"))
@@ -110,11 +112,13 @@ def main():
             t1 = threading.Thread(target=slow_write_task, args=(port,))
             t2 = threading.Thread(target=slow_write_task, args=(port,))
             t3 = threading.Thread(target=read_task, args=(port,))
+            t4 = threading.Thread(target=app_icon_task)
 
             if board_is_connected.is_set():
                 t1.start()
                 t2.start()
                 t3.start()
+                t4.start()
 
         while board_is_connected.is_set():
             time.sleep(1)
