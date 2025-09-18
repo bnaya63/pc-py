@@ -9,9 +9,8 @@ import subprocess
 import win32gui
 import win32process
 import struct
-from main import board_is_connected
-
-
+from crc import Configuration, Calculator
+from globals import board_is_connected, new_app_detected
 # -----------------------------
 # CONFIG
 # -----------------------------
@@ -23,8 +22,20 @@ ICON_PNG_FOLDER = "user_app_icons"
 LVGL_BIN_FOLDER = "lvgl_bin_icons"
 HEIGHT = 100
 WIDTH = 100  # width, height in px
+ICON_SIZE = (100, 100)
 LV_IMG_CF_TRUE_COLOR = 0x02  # RGB565
 APPS_JSON = "apps.json"
+
+
+config_IEEE = Configuration(
+    width=32,
+    polynomial=0x04C11DB7,
+    init_value=0xFFFFFFFF,
+    final_xor_value=0xFFFFFFFF,
+    reverse_input=True,
+    reverse_output=True,
+)
+
 
 os.makedirs(ICON_PNG_FOLDER, exist_ok=True)
 os.makedirs(LVGL_BIN_FOLDER, exist_ok=True)
@@ -44,6 +55,13 @@ def load_registry():
 def save_registry(registry):
     with open(APPS_JSON, "w", encoding="utf-8") as f:
         json.dump(registry, f, indent=2)
+
+
+def calc_crc(data):
+    calculator_IEEE = Calculator(config_IEEE)
+
+    crc = calculator_IEEE.checksum(data)
+    return crc
 
 # -----------------------------
 # Functions
@@ -172,7 +190,8 @@ def pick_top_apps(apps, limit=12):
     return [name for name, score in scored_apps[:limit]]
 
 
-def app_icon_task():
+def find_app_icon_task():
+    new_app_detected.set()
     seen_pids = set()
     current_user = getpass.getuser()
     registry = load_registry()
@@ -234,9 +253,33 @@ def app_icon_task():
         time.sleep(CHECK_INTERVAL)
 
 
-def send_icons_task():
-    last_apps_list = load_registry()
+def create_icon_message():
+    apps_list = load_registry()
 
+    for key in apps_list:
+        entry = apps_list[key]
+        icon_path = entry["icon_bin"]
+        with open(icon_path, 'rb') as icon_file:
+            icon_data = icon_file.read()
+
+        app_name = entry["friendly_name"]
+        score = entry.get("score", 0)
+        crc = calc_crc(icon_data)
+        size = len(icon_data)
+
+        message = {
+            "new_app": app_name,
+            "height": HEIGHT,
+            "width": WIDTH,
+            "size": size,
+            "crc": crc,
+            "score": score
+        }
+
+        yield message, icon_data
+
+
+def abc():
     while board_is_connected.is_set():
         app_list = load_registry()
 
@@ -250,24 +293,16 @@ def send_icons_task():
                 icon_path = new_entry["icon_bin"]
                 icon = open(icon_path, 'rb')
 
+                crc = calc_crc(icon)
+                print(crc)
+
                 app_name = new_entry["friendly_name"]
-                icon_bin_path = new_entry["icon_bin"]
                 score = new_entry.get("score", 0)
 
                 # send_to_esp32(message)
-
+                print(icon_path)
+                print(score)
         # update last list for next loop
             last_apps_list = app_list
 
         time.sleep(1)  # avoid busy loop
-
-
-# send this new entry to the ESP32
-    message = {
-        "new_app": "",
-        "height": HEIGHT,
-        "width": WIDTH,
-        "crc": "",
-        "score": ""
-
-    }

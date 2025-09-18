@@ -8,3 +8,5 @@ keyboard
 psutil
 pillow
 pywin32
+
+crc

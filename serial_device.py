@@ -23,7 +23,7 @@ def find_serial_port(serial_chip_vid, serial_chip_pid):
         if port.vid == serial_chip_vid and port.pid == serial_chip_pid:
             print(f"found esp32 on {port}")
             try:
-                port_connected = serial.Serial(port.device, 230400, timeout=2)
+                port_connected = serial.Serial(port.device, 460800, timeout=2)
                 time.sleep(1)  # allow ESP32 reset after open
                 return port_connected
             except Exception as e:
