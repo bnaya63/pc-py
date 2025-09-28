@@ -8,7 +8,7 @@ import screen_brightness_control as sbc
 from audio import set_volume
 from copy_paste import send_cvx_command
 from serial_device import serial_handshake, find_serial_port, build_slow_message, build_fast_messege
-from icons import find_app_icon_task
+from icons import find_app_icon_task, create_icon_message
 from globals import board_is_connected, new_app_detected
 
 
@@ -32,7 +32,6 @@ serial_lock = threading.Lock()
 
 
 def icon_write_task(port):
-    from icons import create_icon_message
     pythoncom.CoInitialize()
     # while board_is_connected.is_set():
     new_app_detected.clear()
@@ -50,7 +49,7 @@ def icon_write_task(port):
                 if data:
                     try:
                         data_json = json.loads(data)
-                        if "wating_for_icon" in data_json:
+                        if "waiting_for_icon" in data_json:
                             port.read_all()  # flush input
                             # send icon in chunks
                             CHUNK_SIZE = 512
@@ -58,6 +57,7 @@ def icon_write_task(port):
                                 chunk = icon_data[i:i+CHUNK_SIZE]
                                 port.write(chunk)
                                 port.flush()
+                                time.sleep(0.01)
 
                             # signal done
                             done_msg = {"done": "done"}
@@ -89,6 +89,7 @@ def fast_write_task(port):
             port.read_all()
             port.write((messege + "\n").encode("utf-8"))
             port.flush()
+            # time.sleep(0.02)
 
 
 def read_task(port):
@@ -149,7 +150,7 @@ def main():
 
         if port is not None:
             t1 = threading.Thread(target=slow_write_task, args=(port,))
-            t2 = threading.Thread(target=slow_write_task, args=(port,))
+            t2 = threading.Thread(target=fast_write_task, args=(port,))
             t3 = threading.Thread(target=read_task, args=(port,))
             t4 = threading.Thread(target=find_app_icon_task)
 
@@ -160,10 +161,10 @@ def main():
                 t4.start()
 
         while board_is_connected.is_set():
-            if new_app_detected.is_set():
-                icon_write_task(port)
-            else:
-                time.sleep(1)
+           # if new_app_detected.is_set():
+            # icon_write_task(port)
+           # else:
+            time.sleep(1)
 
         board_is_connected.clear()
 
