@@ -279,30 +279,30 @@ def create_icon_message():
         yield message, icon_data
 
 
-def abc():
-    while board_is_connected.is_set():
-        app_list = load_registry()
+# def abc():
+#     while board_is_connected.is_set():
+#         app_list = load_registry()
 
-        # detect if new app(s) were added
-        if len(app_list) > len(last_apps_list):
-            # find new entries by set difference on keys
-            new_keys = set(app_list.keys()) - set(last_apps_list.keys())
+#         # detect if new app(s) were added
+#         if len(app_list) > len(last_apps_list):
+#             # find new entries by set difference on keys
+#             new_keys = set(app_list.keys()) - set(last_apps_list.keys())
 
-            for key in new_keys:
-                new_entry = app_list[key]
-                icon_path = new_entry["icon_bin"]
-                icon = open(icon_path, 'rb')
+#             for key in new_keys:
+#                 new_entry = app_list[key]
+#                 icon_path = new_entry["icon_bin"]
+#                 icon = open(icon_path, 'rb')
 
-                crc = calc_crc(icon)
-                print(crc)
+#                 crc = calc_crc(icon)
+#                 print(crc)
 
-                app_name = new_entry["friendly_name"]
-                score = new_entry.get("score", 0)
+#                 app_name = new_entry["friendly_name"]
+#                 score = new_entry.get("score", 0)
 
-                # send_to_esp32(message)
-                print(icon_path)
-                print(score)
-        # update last list for next loop
-            last_apps_list = app_list
+#                 # send_to_esp32(message)
+#                 print(icon_path)
+#                 print(score)
+#         # update last list for next loop
+#             last_apps_list = app_list
 
-        time.sleep(1)  # avoid busy loop
+#         time.sleep(1)  # avoid busy loop
