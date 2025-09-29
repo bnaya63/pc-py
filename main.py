@@ -6,7 +6,7 @@ import screen_brightness_control as sbc
 
 # locale imports
 from audio import set_volume
-from copy_paste import send_cvx_command
+from actions import do_action
 from serial_device import serial_handshake, find_serial_port, build_slow_message, build_fast_messege
 from icons import find_app_icon_task, create_icon_message
 from globals import board_is_connected, new_app_detected
@@ -107,9 +107,10 @@ def read_task(port):
                     # --- handle parsed data ---
                     if isinstance(data, dict):  # only process dict JSON objects
                         if "command" in data:
-                            var_set_command = data["command"]
-                            if var_set_command:
-                                send_cvx_command(var_set_command)
+                            var_command = data.get("command")
+                            if var_command:
+                                do_action(var_command)
+
                         else:
                             var_set_volume = data.get("setVolume")
                             var_set_brightness = data.get("setBrightness")
@@ -152,13 +153,13 @@ def main():
             t1 = threading.Thread(target=slow_write_task, args=(port,))
             t2 = threading.Thread(target=fast_write_task, args=(port,))
             t3 = threading.Thread(target=read_task, args=(port,))
-            t4 = threading.Thread(target=find_app_icon_task)
+            # t4 = threading.Thread(target=find_app_icon_task)
 
             if board_is_connected.is_set():
                 t1.start()
                 t2.start()
                 t3.start()
-                t4.start()
+                # t4.start()
 
         while board_is_connected.is_set():
            # if new_app_detected.is_set():

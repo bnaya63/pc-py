@@ -1,0 +1,209 @@
+{
+  "vivaldi": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Local\\Vivaldi\\Application\\vivaldi.exe",
+    "friendly_name": "vivaldi",
+    "icon_bin": "lvgl_bin_icons\\vivaldi.bin",
+    "icon_png": "user_app_icons\\vivaldi.png",
+    "times_run": 5,
+    "last_run": "2025-09-29T17:49:33.645076",
+    "score": 25.0
+  },
+  "Code": {
+    "exe_path": "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+    "friendly_name": "Code",
+    "icon_bin": "lvgl_bin_icons\\Code.bin",
+    "icon_png": "user_app_icons\\Code.png",
+    "times_run": 4,
+    "last_run": "2025-09-29T17:22:20.200520",
+    "score": 24.0
+  },
+  "EEZ Studio": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Local\\Programs\\eezstudio\\EEZ Studio.exe",
+    "friendly_name": "EEZ Studio",
+    "icon_bin": "lvgl_bin_icons\\EEZ Studio.bin",
+    "icon_png": "user_app_icons\\EEZ Studio.png",
+    "times_run": 4,
+    "last_run": "2025-09-29T17:22:20.780007",
+    "score": 24.0
+  },
+  "wps": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Local\\Kingsoft\\WPS Office\\12.2.0.22222\\office6\\wps.exe",
+    "friendly_name": "wps",
+    "icon_bin": "lvgl_bin_icons\\wps.bin",
+    "icon_png": "user_app_icons\\wps.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:47:03.124800",
+    "score": 21.0
+  },
+  "copyq": {
+    "exe_path": "C:\\Program Files\\CopyQ\\copyq.exe",
+    "friendly_name": "copyq",
+    "icon_bin": "lvgl_bin_icons\\copyq.bin",
+    "icon_png": "user_app_icons\\copyq.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:47:13.767873",
+    "score": 21.0
+  },
+  "Listary": {
+    "exe_path": "C:\\Program Files\\Listary\\Listary.exe",
+    "friendly_name": "Listary",
+    "icon_bin": "lvgl_bin_icons\\Listary.bin",
+    "icon_png": "user_app_icons\\Listary.png",
+    "times_run": 2,
+    "last_run": "2025-09-29T17:49:33.330776",
+    "score": 22.0
+  },
+  "putty": {
+    "exe_path": "C:\\Program Files\\PuTTY\\putty.exe",
+    "friendly_name": "putty",
+    "icon_bin": "lvgl_bin_icons\\putty.bin",
+    "icon_png": "user_app_icons\\putty.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:47:29.479991",
+    "score": 21.0
+  },
+  "javaw": {
+    "exe_path": "C:\\Program Files (x86)\\Arduino\\java\\bin\\javaw.exe",
+    "friendly_name": "javaw",
+    "icon_bin": "lvgl_bin_icons\\javaw.bin",
+    "icon_png": "user_app_icons\\javaw.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:47:50.040580",
+    "score": 21.0
+  },
+  "HxD": {
+    "exe_path": "C:\\Program Files\\HxD\\HxD.exe",
+    "friendly_name": "HxD",
+    "icon_bin": "lvgl_bin_icons\\HxD.bin",
+    "icon_png": "user_app_icons\\HxD.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:48:05.585624",
+    "score": 21.0
+  },
+  "freecad": {
+    "exe_path": "C:\\Program Files\\FreeCAD 1.0\\bin\\freecad.exe",
+    "friendly_name": "freecad",
+    "icon_bin": "lvgl_bin_icons\\freecad.bin",
+    "icon_png": "user_app_icons\\freecad.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:48:41.308306",
+    "score": 21.0
+  },
+  "Wireshark": {
+    "exe_path": "C:\\Program Files\\Wireshark\\Wireshark.exe",
+    "friendly_name": "Wireshark",
+    "icon_bin": "lvgl_bin_icons\\Wireshark.bin",
+    "icon_png": "user_app_icons\\Wireshark.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:49:47.525002",
+    "score": 21.0
+  },
+  "7zFM": {
+    "exe_path": "C:\\Program Files\\7-Zip\\7zFM.exe",
+    "friendly_name": "7zFM",
+    "icon_bin": "lvgl_bin_icons\\7zFM.bin",
+    "icon_png": "user_app_icons\\7zFM.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:50:03.023681",
+    "score": 21.0
+  },
+  "nw": {
+    "exe_path": "C:\\Program Files (x86)\\Open Source\\MeshCommander\\nw.exe",
+    "friendly_name": "nw",
+    "icon_bin": "lvgl_bin_icons\\nw.bin",
+    "icon_png": "user_app_icons\\nw.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:50:23.839239",
+    "score": 21.0
+  },
+  "prusaslicer": {
+    "exe_path": "C:\\Program Files\\Prusa3D\\PrusaSlicer\\prusa-slicer.exe",
+    "friendly_name": "prusaslicer",
+    "icon_bin": "lvgl_bin_icons\\prusaslicer.bin",
+    "icon_png": "user_app_icons\\prusa-slicer.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:51:04.673156",
+    "score": 21.0
+  },
+  "balenaEtcher": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Local\\balena_etcher\\app-2.1.0\\balenaEtcher.exe",
+    "friendly_name": "balenaEtcher",
+    "icon_bin": "lvgl_bin_icons\\balenaEtcher.bin",
+    "icon_png": "user_app_icons\\balenaEtcher.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:51:44.267743",
+    "score": 21.0
+  },
+  "Brother iPrintScan": {
+    "exe_path": "C:\\Program Files (x86)\\Brother\\iPrint&Scan\\Brother iPrint&Scan.exe",
+    "friendly_name": "Brother iPrintScan",
+    "icon_bin": "lvgl_bin_icons\\Brother iPrintScan.bin",
+    "icon_png": "user_app_icons\\Brother iPrint&Scan.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:51:59.786122",
+    "score": 21.0
+  },
+  "HWMonitor": {
+    "exe_path": "C:\\Program Files\\CPUID\\HWMonitor\\HWMonitor.exe",
+    "friendly_name": "HWMonitor",
+    "icon_bin": "lvgl_bin_icons\\HWMonitor.bin",
+    "icon_png": "user_app_icons\\HWMonitor.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:52:30.389505",
+    "score": 21.0
+  },
+  "obs64": {
+    "exe_path": "C:\\Program Files\\obs-studio\\bin\\64bit\\obs64.exe",
+    "friendly_name": "obs64",
+    "icon_bin": "lvgl_bin_icons\\obs64.bin",
+    "icon_png": "user_app_icons\\obs64.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:53:21.643267",
+    "score": 21.0
+  },
+  "Telegram": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe",
+    "friendly_name": "Telegram",
+    "icon_bin": "lvgl_bin_icons\\Telegram.bin",
+    "icon_png": "user_app_icons\\Telegram.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:53:43.238288",
+    "score": 21.0
+  },
+  "VirtualBox": {
+    "exe_path": "C:\\Program Files\\Oracle\\VirtualBox\\VirtualBox.exe",
+    "friendly_name": "VirtualBox",
+    "icon_bin": "lvgl_bin_icons\\VirtualBox.bin",
+    "icon_png": "user_app_icons\\VirtualBox.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:54:39.256239",
+    "score": 21.0
+  },
+  "vlc": {
+    "exe_path": "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe",
+    "friendly_name": "vlc",
+    "icon_bin": "lvgl_bin_icons\\vlc.bin",
+    "icon_png": "user_app_icons\\vlc.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:54:55.009791",
+    "score": 21.0
+  },
+  "Zoom": {
+    "exe_path": "C:\\Users\\bnaya\\AppData\\Roaming\\Zoom\\bin\\Zoom.exe",
+    "friendly_name": "Zoom",
+    "icon_bin": "lvgl_bin_icons\\Zoom.bin",
+    "icon_png": "user_app_icons\\Zoom.png",
+    "times_run": 1,
+    "last_run": "2025-09-29T14:55:15.966890",
+    "score": 21.0
+  },
+  "fdm": {
+    "exe_path": "C:\\Program Files\\Softdeluxe\\Free Download Manager\\fdm.exe",
+    "friendly_name": "fdm",
+    "icon_bin": "lvgl_bin_icons\\fdm.bin",
+    "icon_png": "user_app_icons\\fdm.png",
+    "times_run": 2,
+    "last_run": "2025-09-29T17:19:52.494346",
+    "score": 22.0
+  }
+}
